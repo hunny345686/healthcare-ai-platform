@@ -13,14 +13,73 @@ enum UserRole {
     ADMIN
 }
 
+enum AppointmentStatus {
+    PENDING
+    CONFIRMED
+    CANCELLED
+    COMPLETED
+}
+
 model User {
     id           String   @id @default(uuid()) @db.Uuid
     email        String   @unique @db.VarChar(255)
     passwordHash String   @map("password_hash") @db.VarChar(255)
     role         UserRole @default(PATIENT)
 
+    patientProfile PatientProfile?
+    doctorProfile  DoctorProfile?
+
     createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
     updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
     @@map("users")
+}
+
+model PatientProfile {
+    id          String    @id @default(uuid()) @db.Uuid
+    userId      String    @unique @map("user_id") @db.Uuid
+    dateOfBirth DateTime? @map("date_of_birth") @db.Date
+
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    appointments Appointment[]
+
+    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+    @@map("patient_profiles")
+}
+
+model DoctorProfile {
+    id            String @id @default(uuid()) @db.Uuid
+    userId        String @unique @map("user_id") @db.Uuid
+    specialty     String @db.VarChar(100)
+    licenseNumber String @unique @map("license_number") @db.VarChar(100)
+
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    appointments Appointment[]
+
+    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+    @@index([specialty])
+    @@map("doctor_profiles")
+}
+
+model Appointment {
+    id        String            @id @default(uuid()) @db.Uuid
+    patientId String            @map("patient_id") @db.Uuid
+    doctorId  String            @map("doctor_id") @db.Uuid
+    startAt   DateTime          @map("start_at") @db.Timestamptz(6)
+    endAt     DateTime          @map("end_at") @db.Timestamptz(6)
+    status    AppointmentStatus @default(PENDING)
+
+    patient PatientProfile @relation(fields: [patientId], references: [id], onDelete: Restrict)
+    doctor  DoctorProfile  @relation(fields: [doctorId], references: [id], onDelete: Restrict)
+
+    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+    @@index([patientId, startAt])
+    @@index([doctorId, startAt])
+    @@map("appointments")
 }

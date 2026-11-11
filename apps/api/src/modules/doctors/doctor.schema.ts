@@ -1,9 +1,7 @@
 import { z } from "zod";
 
 export const doctorParamsSchema = z.object({
-  doctorId: z.string().regex(/^\d+$/, {
-    message: "Doctor ID must contain only numbers",
-  }),
+  doctorId: z.string().uuid(),
 });
 
 export const doctorSearchQuerySchema = z.object({
