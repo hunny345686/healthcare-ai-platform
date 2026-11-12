@@ -3,7 +3,7 @@ import type { FastifyPluginAsync } from "fastify";
 import { AppError } from "../../common/errors/app-error.js";
 import { doctorParamsSchema } from "./doctor.schema.js";
 import { createDoctorService } from "./doctor.service.js";
-
+import { createDoctorSchema } from "./doctor.schema.js";
 const doctorRoutes: FastifyPluginAsync = async (app) => {
   const doctorService = createDoctorService(app.prisma);
 
@@ -29,6 +29,26 @@ const doctorRoutes: FastifyPluginAsync = async (app) => {
       success: true,
       data: doctor,
     };
+  });
+
+  app.post("/", async (request, reply) => {
+    const result = createDoctorSchema.safeParse(request.body);
+
+    if (!result.success) {
+      throw new AppError(
+        400,
+        "VALIDATION_ERROR",
+        "Invalid doctor registration details",
+      );
+    }
+
+    const doctor = await doctorService.createDoctor(result.data);
+
+    return reply.code(201).send({
+      success: true,
+      message: "Doctor created successfully",
+      data: doctor,
+    });
   });
 };
 

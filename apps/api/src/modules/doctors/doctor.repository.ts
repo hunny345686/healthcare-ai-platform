@@ -33,5 +33,47 @@ export function createDoctorRepository(prisma: PrismaClient) {
         },
       });
     },
+
+    async create(data: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      passwordHash: string;
+      specialty: string;
+      licenseNumber: string;
+    }) {
+      return prisma.$transaction(async (tx) => {
+        const user = await tx.user.create({
+          data: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            passwordHash: data.passwordHash,
+            role: "DOCTOR",
+          },
+        });
+
+        const doctor = await tx.doctorProfile.create({
+          data: {
+            userId: user.id,
+            specialty: data.specialty,
+            licenseNumber: data.licenseNumber,
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                role: true,
+              },
+            },
+          },
+        });
+
+        return doctor;
+      });
+    },
   };
 }
