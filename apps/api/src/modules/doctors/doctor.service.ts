@@ -2,6 +2,8 @@ import type { PrismaClient } from "../../generated/prisma/client.js";
 import { AppError } from "../../common/errors/app-error.js";
 import { createDoctorRepository } from "./doctor.repository.js";
 
+import { isPrismaUniqueConstraintError } from "../../common/utils/prisma-errors.js";
+
 import * as argon2 from "argon2";
 
 function isUniqueConstraintError(error: unknown): boolean {
@@ -51,7 +53,7 @@ export function createDoctorService(prisma: PrismaClient) {
           licenseNumber: data.licenseNumber,
         });
       } catch (error) {
-        if (isUniqueConstraintError(error)) {
+        if (isPrismaUniqueConstraintError(error)) {
           throw new AppError(
             409,
             "DOCTOR_ALREADY_EXISTS",
