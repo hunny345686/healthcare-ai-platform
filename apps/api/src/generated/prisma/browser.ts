@@ -37,3 +37,18 @@ export type DoctorProfile = Prisma.DoctorProfileModel
  * 
  */
 export type Appointment = Prisma.AppointmentModel
+/**
+ * Model DoctorWeeklyAvailability
+ * 
+ */
+export type DoctorWeeklyAvailability = Prisma.DoctorWeeklyAvailabilityModel
+/**
+ * Model DoctorAvailabilityException
+ * 
+ */
+export type DoctorAvailabilityException = Prisma.DoctorAvailabilityExceptionModel
+/**
+ * Model DoctorAvailabilityExceptionWindow
+ * 
+ */
+export type DoctorAvailabilityExceptionWindow = Prisma.DoctorAvailabilityExceptionWindowModel

@@ -1,87 +1,154 @@
 generator client {
-    provider = "prisma-client"
-    output   = "../src/generated/prisma"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-    provider = "postgresql"
+  provider = "postgresql"
 }
 
 enum UserRole {
-    PATIENT
-    DOCTOR
-    ADMIN
+  PATIENT
+  DOCTOR
+  ADMIN
 }
 
 enum AppointmentStatus {
-    PENDING
-    CONFIRMED
-    CANCELLED
-    COMPLETED
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum Weekday {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum AvailabilityExceptionType {
+  CLOSED
+  CUSTOM_HOURS
 }
 
 model User {
-    id           String   @id @default(uuid()) @db.Uuid
-    firstName    String   @map("first_name") @db.VarChar(100)
-    lastName     String   @map("last_name") @db.VarChar(100)
-    email        String   @unique @db.VarChar(255)
-    passwordHash String   @map("password_hash") @db.VarChar(255)
-    role         UserRole @default(PATIENT)
+  id           String   @id @default(uuid()) @db.Uuid
+  firstName    String   @map("first_name") @db.VarChar(100)
+  lastName     String   @map("last_name") @db.VarChar(100)
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  role         UserRole @default(PATIENT)
 
-    patientProfile PatientProfile?
-    doctorProfile  DoctorProfile?
+  patientProfile PatientProfile?
+  doctorProfile  DoctorProfile?
 
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-    @@map("users")
+  @@map("users")
 }
 
 model PatientProfile {
-    id          String    @id @default(uuid()) @db.Uuid
-    userId      String    @unique @map("user_id") @db.Uuid
-    dateOfBirth DateTime? @map("date_of_birth") @db.Date
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @unique @map("user_id") @db.Uuid
+  dateOfBirth DateTime? @map("date_of_birth") @db.Date
 
-    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-    appointments Appointment[]
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
 
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-    @@map("patient_profiles")
+  @@map("patient_profiles")
 }
 
 model DoctorProfile {
-    id            String @id @default(uuid()) @db.Uuid
-    userId        String @unique @map("user_id") @db.Uuid
-    specialty     String @db.VarChar(100)
-    licenseNumber String @unique @map("license_number") @db.VarChar(100)
+  id            String @id @default(uuid()) @db.Uuid
+  userId        String @unique @map("user_id") @db.Uuid
+  specialty     String @db.VarChar(100)
+  licenseNumber String @unique @map("license_number") @db.VarChar(100)
 
-    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-    appointments Appointment[]
+  timezone               String                        @default("Asia/Kolkata")
+  weeklyAvailability     DoctorWeeklyAvailability[]
+  availabilityExceptions DoctorAvailabilityException[]
 
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
 
-    @@index([specialty])
-    @@map("doctor_profiles")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([specialty])
+  @@map("doctor_profiles")
 }
 
 model Appointment {
-    id        String            @id @default(uuid()) @db.Uuid
-    patientId String            @map("patient_id") @db.Uuid
-    doctorId  String            @map("doctor_id") @db.Uuid
-    startAt   DateTime          @map("start_at") @db.Timestamptz(6)
-    endAt     DateTime          @map("end_at") @db.Timestamptz(6)
-    status    AppointmentStatus @default(PENDING)
+  id        String            @id @default(uuid()) @db.Uuid
+  patientId String            @map("patient_id") @db.Uuid
+  doctorId  String            @map("doctor_id") @db.Uuid
+  startAt   DateTime          @map("start_at") @db.Timestamptz(3)
+  endAt     DateTime          @map("end_at") @db.Timestamptz(3)
+  status    AppointmentStatus @default(PENDING)
 
-    patient PatientProfile @relation(fields: [patientId], references: [id], onDelete: Restrict)
-    doctor  DoctorProfile  @relation(fields: [doctorId], references: [id], onDelete: Restrict)
+  patient PatientProfile @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  doctor  DoctorProfile  @relation(fields: [doctorId], references: [id], onDelete: Restrict)
 
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-    @@index([patientId, startAt])
-    @@index([doctorId, startAt])
-    @@map("appointments")
+  @@index([patientId, startAt])
+  @@index([doctorId, startAt])
+  @@map("appointments")
+}
+
+model DoctorWeeklyAvailability {
+  id          String  @id @default(uuid()) @db.Uuid
+  doctorId    String  @map("doctor_id") @db.Uuid
+  dayOfWeek   Weekday @map("day_of_week")
+  startMinute Int     @map("start_minute")
+  endMinute   Int     @map("end_minute")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  doctor DoctorProfile @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@unique([doctorId, dayOfWeek, startMinute])
+  @@map("doctor_weekly_availability")
+}
+
+model DoctorAvailabilityException {
+  id       String                    @id @default(uuid()) @db.Uuid
+  doctorId String                    @map("doctor_id") @db.Uuid
+  date     DateTime                  @db.Date
+  type     AvailabilityExceptionType
+  reason   String?
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  doctor DoctorProfile @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  windows DoctorAvailabilityExceptionWindow[]
+
+  @@unique([doctorId, date])
+  @@map("doctor_availability_exceptions")
+}
+
+model DoctorAvailabilityExceptionWindow {
+  id          String @id @default(uuid()) @db.Uuid
+  exceptionId String @map("exception_id") @db.Uuid
+  startMinute Int    @map("start_minute")
+  endMinute   Int    @map("end_minute")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  exception DoctorAvailabilityException @relation(fields: [exceptionId], references: [id], onDelete: Cascade)
+
+  @@unique([exceptionId, startMinute])
+  @@map("doctor_availability_exception_windows")
 }

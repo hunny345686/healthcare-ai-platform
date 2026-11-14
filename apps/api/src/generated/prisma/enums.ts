@@ -26,3 +26,24 @@ export const AppointmentStatus = {
 } as const
 
 export type AppointmentStatus = (typeof AppointmentStatus)[keyof typeof AppointmentStatus]
+
+
+export const Weekday = {
+  MONDAY: 'MONDAY',
+  TUESDAY: 'TUESDAY',
+  WEDNESDAY: 'WEDNESDAY',
+  THURSDAY: 'THURSDAY',
+  FRIDAY: 'FRIDAY',
+  SATURDAY: 'SATURDAY',
+  SUNDAY: 'SUNDAY'
+} as const
+
+export type Weekday = (typeof Weekday)[keyof typeof Weekday]
+
+
+export const AvailabilityExceptionType = {
+  CLOSED: 'CLOSED',
+  CUSTOM_HOURS: 'CUSTOM_HOURS'
+} as const
+
+export type AvailabilityExceptionType = (typeof AvailabilityExceptionType)[keyof typeof AvailabilityExceptionType]

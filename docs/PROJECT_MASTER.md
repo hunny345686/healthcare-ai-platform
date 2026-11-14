@@ -124,22 +124,24 @@ Backend layers:
 - Repositories
 - Infrastructure
 
-## 5. Learning roadmap
+## 5. Updated learning roadmap
 
-1. Project setup and backend foundations.
-2. Authentication and authorization.
-3. Patient and doctor management.
-4. Appointment management.
-5. PostgreSQL internals, indexing and transactions.
-6. Redis and caching.
-7. Kafka, workers and transactional outbox.
-8. Replication and sharding concepts.
-9. LLM integration.
-10. RAG and vector search.
-11. Agents, tool calling and MCP.
-12. AI security, evaluation and monitoring.
-13. Docker, CI/CD and deployment.
-14. Load testing and production readiness.
+1. Project setup and backend foundations — completed.
+2. Database architecture and Prisma — core implementation completed.
+3. Doctor and Patient management — initial registration implemented.
+4. Appointment management and concurrency.
+5. Authentication and authorization.
+6. PostgreSQL internals, indexing and performance.
+7. Redis and caching.
+8. Kafka, workers and transactional outbox.
+9. Replication, sharding and recovery.
+10. LLM integration.
+11. RAG and vector search.
+12. AI agents, function calling and MCP.
+13. AI security, evaluation and monitoring.
+14. Docker, CI/CD and deployment.
+15. Unit, integration, E2E, load and security testing.
+16. Production readiness.
 
 ## 6. My experience and learning preferences
 
@@ -176,40 +178,98 @@ For every feature:
 
 Use conventional commit messages.
 
-## 8. Current progress
+## 8. Current project progress — November 13, 2026
 
-Completed or established:
+### Completed — Project foundations
 
-- Product scope and requirements.
-- Modular monolith architecture.
-- Technology choices.
-- npm monorepo initialization.
+- npm monorepo and workspaces.
 - Root TypeScript configuration.
 - Next.js frontend scaffold.
 - Fastify backend scaffold.
-- Initial backend health endpoint.
-- HTTP request lifecycle introduction.
-- Route, controller and service concepts.
-- Route parameter vs query parameter.
-- Basic HTTP status codes.
+- Initial health endpoint.
+- Docker environment.
 
-Current phase:
-Phase 2 — Backend architecture.
+### Completed — Backend architecture learning
 
-Current learning topic:
-HTTP request lifecycle and API architecture.
+- HTTP request lifecycle.
+- Routes, controllers, services and repositories.
+- Route parameters versus query parameters.
+- HTTP status codes.
+- Zod runtime validation concepts.
+- Centralized error handling concepts.
+- Fastify plugins and encapsulation.
+- Fastify hooks.
+- Fastify `.inject()` API testing concepts.
 
-Next lesson:
-Zod request validation and centralized error handling.
+### Completed — Database architecture implementation
 
-Pending:
+- PostgreSQL running through Docker Compose.
+- Separate Prisma 7 configuration.
+- Prisma Client and PostgreSQL adapter.
+- Database migrations.
+- User, PatientProfile, DoctorProfile and Appointment models.
+- User-to-profile and profile-to-appointment relationships.
+- Fastify database plugin and Prisma integration.
+- Database health endpoint.
+- Doctor repository and service.
+- Database-backed Doctor GET endpoints.
+- Doctor registration using Prisma transactions.
+- Argon2id password hashing.
+- Patient registration using Prisma transactions.
+- Duplicate email and license handling using database constraints.
 
-- Verify doctor details API implementation.
-- Implement request validation.
-- Implement centralized error handling.
-- Add API tests.
-- Verify frontend build and Git commits.
-- Introduce PostgreSQL and Prisma.
+### Git status
+
+- Doctor registration milestone: commit and push confirmed.
+- Patient registration milestone: implementation discussed and commit workflow initiated; verify actual Git history before marking its push as confirmed.
+- Other earlier commits should be verified from the repository's Git history.
+
+### Current phase
+
+Phase 3 — Database Architecture.
+
+### Current implementation status
+
+Core database infrastructure, initial domain models and Doctor/Patient registration have been implemented.
+
+### Current learning status
+
+- PostgreSQL fundamentals: taught.
+- Prisma integration: implemented.
+- Relational database design: implemented.
+- Repository and service patterns: implemented for Doctors and Patients.
+- Prisma transactions: practiced through registration features.
+- Automated integration testing: deferred to the dedicated testing phase.
+
+### Current next milestone
+
+Phase 4 — Appointment Management.
+
+### Next lesson
+
+Doctor Availability and Appointment Slot Design.
+
+Topics:
+
+1. Doctor availability and working schedules.
+2. Appointment slot modelling.
+3. Appointment creation and cancellation.
+4. Preventing overlapping bookings.
+5. PostgreSQL transactions and concurrency.
+6. Idempotency for retry-sensitive booking requests.
+7. HTTP 409 conflict handling.
+
+### Deferred work
+
+- Authentication and role-based authorization.
+- Automated unit and integration tests.
+- E2E testing.
+- Database performance optimization.
+- Redis caching.
+- Kafka and transactional outbox.
+- AI/RAG implementation.
+- CI/CD and deployment.
+- Load and security testing.
 
 ## 9. Continuity requirements
 
@@ -234,3 +294,22 @@ At the end of each learning session, update:
 - Exact next step.
 
 Continue mentoring me as an ongoing engineering project, not as unrelated tutorials.
+
+## Project progress tracking rules
+
+Track each feature using four separate statuses:
+
+- **Discussed:** Architecture or concept has been explained.
+- **Implemented:** Code has been written.
+- **Verified:** The user has confirmed that the implementation works.
+- **Committed and pushed:** Git history confirms the changes were committed and pushed.
+
+Never mark a feature as completed merely because code examples were provided.
+
+Never assume a Git commit or push succeeded without confirmation or repository evidence.
+
+Update PROJECT_MASTER.md at meaningful milestones.
+
+At the end of every session, provide a reusable checkpoint containing the exact current phase, completed work, unfinished tasks, architecture decisions, file changes and Git status.
+
+Automated testing is deferred to the dedicated testing and deployment phase. Continue basic type checking, build verification and manual API verification during feature development.

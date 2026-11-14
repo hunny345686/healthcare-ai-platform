@@ -29,6 +29,7 @@ export type DoctorProfileMinAggregateOutputType = {
   userId: string | null
   specialty: string | null
   licenseNumber: string | null
+  timezone: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -38,6 +39,7 @@ export type DoctorProfileMaxAggregateOutputType = {
   userId: string | null
   specialty: string | null
   licenseNumber: string | null
+  timezone: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -47,6 +49,7 @@ export type DoctorProfileCountAggregateOutputType = {
   userId: number
   specialty: number
   licenseNumber: number
+  timezone: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -58,6 +61,7 @@ export type DoctorProfileMinAggregateInputType = {
   userId?: true
   specialty?: true
   licenseNumber?: true
+  timezone?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -67,6 +71,7 @@ export type DoctorProfileMaxAggregateInputType = {
   userId?: true
   specialty?: true
   licenseNumber?: true
+  timezone?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -76,6 +81,7 @@ export type DoctorProfileCountAggregateInputType = {
   userId?: true
   specialty?: true
   licenseNumber?: true
+  timezone?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -158,6 +164,7 @@ export type DoctorProfileGroupByOutputType = {
   userId: string
   specialty: string
   licenseNumber: string
+  timezone: string
   createdAt: Date
   updatedAt: Date
   _count: DoctorProfileCountAggregateOutputType | null
@@ -188,8 +195,11 @@ export type DoctorProfileWhereInput = {
   userId?: Prisma.UuidFilter<"DoctorProfile"> | string
   specialty?: Prisma.StringFilter<"DoctorProfile"> | string
   licenseNumber?: Prisma.StringFilter<"DoctorProfile"> | string
+  timezone?: Prisma.StringFilter<"DoctorProfile"> | string
   createdAt?: Prisma.DateTimeFilter<"DoctorProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DoctorProfile"> | Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityListRelationFilter
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   appointments?: Prisma.AppointmentListRelationFilter
 }
@@ -199,8 +209,11 @@ export type DoctorProfileOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   specialty?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
+  timezone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityOrderByRelationAggregateInput
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionOrderByRelationAggregateInput
   user?: Prisma.UserOrderByWithRelationInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
 }
@@ -213,8 +226,11 @@ export type DoctorProfileWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.DoctorProfileWhereInput[]
   NOT?: Prisma.DoctorProfileWhereInput | Prisma.DoctorProfileWhereInput[]
   specialty?: Prisma.StringFilter<"DoctorProfile"> | string
+  timezone?: Prisma.StringFilter<"DoctorProfile"> | string
   createdAt?: Prisma.DateTimeFilter<"DoctorProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DoctorProfile"> | Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityListRelationFilter
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   appointments?: Prisma.AppointmentListRelationFilter
 }, "id" | "userId" | "licenseNumber">
@@ -224,6 +240,7 @@ export type DoctorProfileOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   specialty?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
+  timezone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.DoctorProfileCountOrderByAggregateInput
@@ -239,6 +256,7 @@ export type DoctorProfileScalarWhereWithAggregatesInput = {
   userId?: Prisma.UuidWithAggregatesFilter<"DoctorProfile"> | string
   specialty?: Prisma.StringWithAggregatesFilter<"DoctorProfile"> | string
   licenseNumber?: Prisma.StringWithAggregatesFilter<"DoctorProfile"> | string
+  timezone?: Prisma.StringWithAggregatesFilter<"DoctorProfile"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DoctorProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"DoctorProfile"> | Date | string
 }
@@ -247,8 +265,11 @@ export type DoctorProfileCreateInput = {
   id?: string
   specialty: string
   licenseNumber: string
+  timezone?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityCreateNestedManyWithoutDoctorInput
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionCreateNestedManyWithoutDoctorInput
   user: Prisma.UserCreateNestedOneWithoutDoctorProfileInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutDoctorInput
 }
@@ -258,8 +279,11 @@ export type DoctorProfileUncheckedCreateInput = {
   userId: string
   specialty: string
   licenseNumber: string
+  timezone?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityUncheckedCreateNestedManyWithoutDoctorInput
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionUncheckedCreateNestedManyWithoutDoctorInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutDoctorInput
 }
 
@@ -267,8 +291,11 @@ export type DoctorProfileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   specialty?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityUpdateManyWithoutDoctorNestedInput
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionUpdateManyWithoutDoctorNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutDoctorProfileNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutDoctorNestedInput
 }
@@ -278,8 +305,11 @@ export type DoctorProfileUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   specialty?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityUncheckedUpdateManyWithoutDoctorNestedInput
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionUncheckedUpdateManyWithoutDoctorNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutDoctorNestedInput
 }
 
@@ -288,6 +318,7 @@ export type DoctorProfileCreateManyInput = {
   userId: string
   specialty: string
   licenseNumber: string
+  timezone?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -296,6 +327,7 @@ export type DoctorProfileUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   specialty?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -305,6 +337,7 @@ export type DoctorProfileUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   specialty?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -319,6 +352,7 @@ export type DoctorProfileCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   specialty?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
+  timezone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -328,6 +362,7 @@ export type DoctorProfileMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   specialty?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
+  timezone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -337,6 +372,7 @@ export type DoctorProfileMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   specialty?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
+  timezone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -392,12 +428,43 @@ export type DoctorProfileUpdateOneRequiredWithoutAppointmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DoctorProfileUpdateToOneWithWhereWithoutAppointmentsInput, Prisma.DoctorProfileUpdateWithoutAppointmentsInput>, Prisma.DoctorProfileUncheckedUpdateWithoutAppointmentsInput>
 }
 
+export type DoctorProfileCreateNestedOneWithoutWeeklyAvailabilityInput = {
+  create?: Prisma.XOR<Prisma.DoctorProfileCreateWithoutWeeklyAvailabilityInput, Prisma.DoctorProfileUncheckedCreateWithoutWeeklyAvailabilityInput>
+  connectOrCreate?: Prisma.DoctorProfileCreateOrConnectWithoutWeeklyAvailabilityInput
+  connect?: Prisma.DoctorProfileWhereUniqueInput
+}
+
+export type DoctorProfileUpdateOneRequiredWithoutWeeklyAvailabilityNestedInput = {
+  create?: Prisma.XOR<Prisma.DoctorProfileCreateWithoutWeeklyAvailabilityInput, Prisma.DoctorProfileUncheckedCreateWithoutWeeklyAvailabilityInput>
+  connectOrCreate?: Prisma.DoctorProfileCreateOrConnectWithoutWeeklyAvailabilityInput
+  upsert?: Prisma.DoctorProfileUpsertWithoutWeeklyAvailabilityInput
+  connect?: Prisma.DoctorProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DoctorProfileUpdateToOneWithWhereWithoutWeeklyAvailabilityInput, Prisma.DoctorProfileUpdateWithoutWeeklyAvailabilityInput>, Prisma.DoctorProfileUncheckedUpdateWithoutWeeklyAvailabilityInput>
+}
+
+export type DoctorProfileCreateNestedOneWithoutAvailabilityExceptionsInput = {
+  create?: Prisma.XOR<Prisma.DoctorProfileCreateWithoutAvailabilityExceptionsInput, Prisma.DoctorProfileUncheckedCreateWithoutAvailabilityExceptionsInput>
+  connectOrCreate?: Prisma.DoctorProfileCreateOrConnectWithoutAvailabilityExceptionsInput
+  connect?: Prisma.DoctorProfileWhereUniqueInput
+}
+
+export type DoctorProfileUpdateOneRequiredWithoutAvailabilityExceptionsNestedInput = {
+  create?: Prisma.XOR<Prisma.DoctorProfileCreateWithoutAvailabilityExceptionsInput, Prisma.DoctorProfileUncheckedCreateWithoutAvailabilityExceptionsInput>
+  connectOrCreate?: Prisma.DoctorProfileCreateOrConnectWithoutAvailabilityExceptionsInput
+  upsert?: Prisma.DoctorProfileUpsertWithoutAvailabilityExceptionsInput
+  connect?: Prisma.DoctorProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DoctorProfileUpdateToOneWithWhereWithoutAvailabilityExceptionsInput, Prisma.DoctorProfileUpdateWithoutAvailabilityExceptionsInput>, Prisma.DoctorProfileUncheckedUpdateWithoutAvailabilityExceptionsInput>
+}
+
 export type DoctorProfileCreateWithoutUserInput = {
   id?: string
   specialty: string
   licenseNumber: string
+  timezone?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityCreateNestedManyWithoutDoctorInput
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionCreateNestedManyWithoutDoctorInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutDoctorInput
 }
 
@@ -405,8 +472,11 @@ export type DoctorProfileUncheckedCreateWithoutUserInput = {
   id?: string
   specialty: string
   licenseNumber: string
+  timezone?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityUncheckedCreateNestedManyWithoutDoctorInput
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionUncheckedCreateNestedManyWithoutDoctorInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutDoctorInput
 }
 
@@ -430,8 +500,11 @@ export type DoctorProfileUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   specialty?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityUpdateManyWithoutDoctorNestedInput
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionUpdateManyWithoutDoctorNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutDoctorNestedInput
 }
 
@@ -439,8 +512,11 @@ export type DoctorProfileUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   specialty?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityUncheckedUpdateManyWithoutDoctorNestedInput
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionUncheckedUpdateManyWithoutDoctorNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutDoctorNestedInput
 }
 
@@ -448,8 +524,11 @@ export type DoctorProfileCreateWithoutAppointmentsInput = {
   id?: string
   specialty: string
   licenseNumber: string
+  timezone?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityCreateNestedManyWithoutDoctorInput
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionCreateNestedManyWithoutDoctorInput
   user: Prisma.UserCreateNestedOneWithoutDoctorProfileInput
 }
 
@@ -458,8 +537,11 @@ export type DoctorProfileUncheckedCreateWithoutAppointmentsInput = {
   userId: string
   specialty: string
   licenseNumber: string
+  timezone?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityUncheckedCreateNestedManyWithoutDoctorInput
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionUncheckedCreateNestedManyWithoutDoctorInput
 }
 
 export type DoctorProfileCreateOrConnectWithoutAppointmentsInput = {
@@ -482,8 +564,11 @@ export type DoctorProfileUpdateWithoutAppointmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   specialty?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityUpdateManyWithoutDoctorNestedInput
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionUpdateManyWithoutDoctorNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutDoctorProfileNestedInput
 }
 
@@ -492,8 +577,139 @@ export type DoctorProfileUncheckedUpdateWithoutAppointmentsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   specialty?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityUncheckedUpdateManyWithoutDoctorNestedInput
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionUncheckedUpdateManyWithoutDoctorNestedInput
+}
+
+export type DoctorProfileCreateWithoutWeeklyAvailabilityInput = {
+  id?: string
+  specialty: string
+  licenseNumber: string
+  timezone?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionCreateNestedManyWithoutDoctorInput
+  user: Prisma.UserCreateNestedOneWithoutDoctorProfileInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutDoctorInput
+}
+
+export type DoctorProfileUncheckedCreateWithoutWeeklyAvailabilityInput = {
+  id?: string
+  userId: string
+  specialty: string
+  licenseNumber: string
+  timezone?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionUncheckedCreateNestedManyWithoutDoctorInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutDoctorInput
+}
+
+export type DoctorProfileCreateOrConnectWithoutWeeklyAvailabilityInput = {
+  where: Prisma.DoctorProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.DoctorProfileCreateWithoutWeeklyAvailabilityInput, Prisma.DoctorProfileUncheckedCreateWithoutWeeklyAvailabilityInput>
+}
+
+export type DoctorProfileUpsertWithoutWeeklyAvailabilityInput = {
+  update: Prisma.XOR<Prisma.DoctorProfileUpdateWithoutWeeklyAvailabilityInput, Prisma.DoctorProfileUncheckedUpdateWithoutWeeklyAvailabilityInput>
+  create: Prisma.XOR<Prisma.DoctorProfileCreateWithoutWeeklyAvailabilityInput, Prisma.DoctorProfileUncheckedCreateWithoutWeeklyAvailabilityInput>
+  where?: Prisma.DoctorProfileWhereInput
+}
+
+export type DoctorProfileUpdateToOneWithWhereWithoutWeeklyAvailabilityInput = {
+  where?: Prisma.DoctorProfileWhereInput
+  data: Prisma.XOR<Prisma.DoctorProfileUpdateWithoutWeeklyAvailabilityInput, Prisma.DoctorProfileUncheckedUpdateWithoutWeeklyAvailabilityInput>
+}
+
+export type DoctorProfileUpdateWithoutWeeklyAvailabilityInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  specialty?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionUpdateManyWithoutDoctorNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutDoctorProfileNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutDoctorNestedInput
+}
+
+export type DoctorProfileUncheckedUpdateWithoutWeeklyAvailabilityInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  specialty?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  availabilityExceptions?: Prisma.DoctorAvailabilityExceptionUncheckedUpdateManyWithoutDoctorNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutDoctorNestedInput
+}
+
+export type DoctorProfileCreateWithoutAvailabilityExceptionsInput = {
+  id?: string
+  specialty: string
+  licenseNumber: string
+  timezone?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityCreateNestedManyWithoutDoctorInput
+  user: Prisma.UserCreateNestedOneWithoutDoctorProfileInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutDoctorInput
+}
+
+export type DoctorProfileUncheckedCreateWithoutAvailabilityExceptionsInput = {
+  id?: string
+  userId: string
+  specialty: string
+  licenseNumber: string
+  timezone?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityUncheckedCreateNestedManyWithoutDoctorInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutDoctorInput
+}
+
+export type DoctorProfileCreateOrConnectWithoutAvailabilityExceptionsInput = {
+  where: Prisma.DoctorProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.DoctorProfileCreateWithoutAvailabilityExceptionsInput, Prisma.DoctorProfileUncheckedCreateWithoutAvailabilityExceptionsInput>
+}
+
+export type DoctorProfileUpsertWithoutAvailabilityExceptionsInput = {
+  update: Prisma.XOR<Prisma.DoctorProfileUpdateWithoutAvailabilityExceptionsInput, Prisma.DoctorProfileUncheckedUpdateWithoutAvailabilityExceptionsInput>
+  create: Prisma.XOR<Prisma.DoctorProfileCreateWithoutAvailabilityExceptionsInput, Prisma.DoctorProfileUncheckedCreateWithoutAvailabilityExceptionsInput>
+  where?: Prisma.DoctorProfileWhereInput
+}
+
+export type DoctorProfileUpdateToOneWithWhereWithoutAvailabilityExceptionsInput = {
+  where?: Prisma.DoctorProfileWhereInput
+  data: Prisma.XOR<Prisma.DoctorProfileUpdateWithoutAvailabilityExceptionsInput, Prisma.DoctorProfileUncheckedUpdateWithoutAvailabilityExceptionsInput>
+}
+
+export type DoctorProfileUpdateWithoutAvailabilityExceptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  specialty?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityUpdateManyWithoutDoctorNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutDoctorProfileNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutDoctorNestedInput
+}
+
+export type DoctorProfileUncheckedUpdateWithoutAvailabilityExceptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  specialty?: Prisma.StringFieldUpdateOperationsInput | string
+  licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weeklyAvailability?: Prisma.DoctorWeeklyAvailabilityUncheckedUpdateManyWithoutDoctorNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutDoctorNestedInput
 }
 
 
@@ -502,10 +718,14 @@ export type DoctorProfileUncheckedUpdateWithoutAppointmentsInput = {
  */
 
 export type DoctorProfileCountOutputType = {
+  weeklyAvailability: number
+  availabilityExceptions: number
   appointments: number
 }
 
 export type DoctorProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  weeklyAvailability?: boolean | DoctorProfileCountOutputTypeCountWeeklyAvailabilityArgs
+  availabilityExceptions?: boolean | DoctorProfileCountOutputTypeCountAvailabilityExceptionsArgs
   appointments?: boolean | DoctorProfileCountOutputTypeCountAppointmentsArgs
 }
 
@@ -522,6 +742,20 @@ export type DoctorProfileCountOutputTypeDefaultArgs<ExtArgs extends runtime.Type
 /**
  * DoctorProfileCountOutputType without action
  */
+export type DoctorProfileCountOutputTypeCountWeeklyAvailabilityArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DoctorWeeklyAvailabilityWhereInput
+}
+
+/**
+ * DoctorProfileCountOutputType without action
+ */
+export type DoctorProfileCountOutputTypeCountAvailabilityExceptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DoctorAvailabilityExceptionWhereInput
+}
+
+/**
+ * DoctorProfileCountOutputType without action
+ */
 export type DoctorProfileCountOutputTypeCountAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AppointmentWhereInput
 }
@@ -532,8 +766,11 @@ export type DoctorProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   userId?: boolean
   specialty?: boolean
   licenseNumber?: boolean
+  timezone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  weeklyAvailability?: boolean | Prisma.DoctorProfile$weeklyAvailabilityArgs<ExtArgs>
+  availabilityExceptions?: boolean | Prisma.DoctorProfile$availabilityExceptionsArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   appointments?: boolean | Prisma.DoctorProfile$appointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.DoctorProfileCountOutputTypeDefaultArgs<ExtArgs>
@@ -544,6 +781,7 @@ export type DoctorProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   userId?: boolean
   specialty?: boolean
   licenseNumber?: boolean
+  timezone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -554,6 +792,7 @@ export type DoctorProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   userId?: boolean
   specialty?: boolean
   licenseNumber?: boolean
+  timezone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -564,12 +803,15 @@ export type DoctorProfileSelectScalar = {
   userId?: boolean
   specialty?: boolean
   licenseNumber?: boolean
+  timezone?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DoctorProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "specialty" | "licenseNumber" | "createdAt" | "updatedAt", ExtArgs["result"]["doctorProfile"]>
+export type DoctorProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "specialty" | "licenseNumber" | "timezone" | "createdAt" | "updatedAt", ExtArgs["result"]["doctorProfile"]>
 export type DoctorProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  weeklyAvailability?: boolean | Prisma.DoctorProfile$weeklyAvailabilityArgs<ExtArgs>
+  availabilityExceptions?: boolean | Prisma.DoctorProfile$availabilityExceptionsArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   appointments?: boolean | Prisma.DoctorProfile$appointmentsArgs<ExtArgs>
   _count?: boolean | Prisma.DoctorProfileCountOutputTypeDefaultArgs<ExtArgs>
@@ -584,6 +826,8 @@ export type DoctorProfileIncludeUpdateManyAndReturn<ExtArgs extends runtime.Type
 export type $DoctorProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DoctorProfile"
   objects: {
+    weeklyAvailability: Prisma.$DoctorWeeklyAvailabilityPayload<ExtArgs>[]
+    availabilityExceptions: Prisma.$DoctorAvailabilityExceptionPayload<ExtArgs>[]
     user: Prisma.$UserPayload<ExtArgs>
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
   }
@@ -592,6 +836,7 @@ export type $DoctorProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     userId: string
     specialty: string
     licenseNumber: string
+    timezone: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["doctorProfile"]>
@@ -988,6 +1233,8 @@ readonly fields: DoctorProfileFieldRefs;
  */
 export interface Prisma__DoctorProfileClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  weeklyAvailability<T extends Prisma.DoctorProfile$weeklyAvailabilityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorProfile$weeklyAvailabilityArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DoctorWeeklyAvailabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  availabilityExceptions<T extends Prisma.DoctorProfile$availabilityExceptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorProfile$availabilityExceptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DoctorAvailabilityExceptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   appointments<T extends Prisma.DoctorProfile$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DoctorProfile$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1023,6 +1270,7 @@ export interface DoctorProfileFieldRefs {
   readonly userId: Prisma.FieldRef<"DoctorProfile", 'String'>
   readonly specialty: Prisma.FieldRef<"DoctorProfile", 'String'>
   readonly licenseNumber: Prisma.FieldRef<"DoctorProfile", 'String'>
+  readonly timezone: Prisma.FieldRef<"DoctorProfile", 'String'>
   readonly createdAt: Prisma.FieldRef<"DoctorProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"DoctorProfile", 'DateTime'>
 }
@@ -1423,6 +1671,54 @@ export type DoctorProfileDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many DoctorProfiles to delete.
    */
   limit?: number
+}
+
+/**
+ * DoctorProfile.weeklyAvailability
+ */
+export type DoctorProfile$weeklyAvailabilityArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DoctorWeeklyAvailability
+   */
+  select?: Prisma.DoctorWeeklyAvailabilitySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DoctorWeeklyAvailability
+   */
+  omit?: Prisma.DoctorWeeklyAvailabilityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DoctorWeeklyAvailabilityInclude<ExtArgs> | null
+  where?: Prisma.DoctorWeeklyAvailabilityWhereInput
+  orderBy?: Prisma.DoctorWeeklyAvailabilityOrderByWithRelationInput | Prisma.DoctorWeeklyAvailabilityOrderByWithRelationInput[]
+  cursor?: Prisma.DoctorWeeklyAvailabilityWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DoctorWeeklyAvailabilityScalarFieldEnum | Prisma.DoctorWeeklyAvailabilityScalarFieldEnum[]
+}
+
+/**
+ * DoctorProfile.availabilityExceptions
+ */
+export type DoctorProfile$availabilityExceptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DoctorAvailabilityException
+   */
+  select?: Prisma.DoctorAvailabilityExceptionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DoctorAvailabilityException
+   */
+  omit?: Prisma.DoctorAvailabilityExceptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DoctorAvailabilityExceptionInclude<ExtArgs> | null
+  where?: Prisma.DoctorAvailabilityExceptionWhereInput
+  orderBy?: Prisma.DoctorAvailabilityExceptionOrderByWithRelationInput | Prisma.DoctorAvailabilityExceptionOrderByWithRelationInput[]
+  cursor?: Prisma.DoctorAvailabilityExceptionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DoctorAvailabilityExceptionScalarFieldEnum | Prisma.DoctorAvailabilityExceptionScalarFieldEnum[]
 }
 
 /**

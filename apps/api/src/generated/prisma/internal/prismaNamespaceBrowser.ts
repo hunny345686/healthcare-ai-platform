@@ -54,7 +54,10 @@ export const ModelName = {
   User: 'User',
   PatientProfile: 'PatientProfile',
   DoctorProfile: 'DoctorProfile',
-  Appointment: 'Appointment'
+  Appointment: 'Appointment',
+  DoctorWeeklyAvailability: 'DoctorWeeklyAvailability',
+  DoctorAvailabilityException: 'DoctorAvailabilityException',
+  DoctorAvailabilityExceptionWindow: 'DoctorAvailabilityExceptionWindow'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -103,6 +106,7 @@ export const DoctorProfileScalarFieldEnum = {
   userId: 'userId',
   specialty: 'specialty',
   licenseNumber: 'licenseNumber',
+  timezone: 'timezone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -122,6 +126,43 @@ export const AppointmentScalarFieldEnum = {
 } as const
 
 export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
+
+
+export const DoctorWeeklyAvailabilityScalarFieldEnum = {
+  id: 'id',
+  doctorId: 'doctorId',
+  dayOfWeek: 'dayOfWeek',
+  startMinute: 'startMinute',
+  endMinute: 'endMinute',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DoctorWeeklyAvailabilityScalarFieldEnum = (typeof DoctorWeeklyAvailabilityScalarFieldEnum)[keyof typeof DoctorWeeklyAvailabilityScalarFieldEnum]
+
+
+export const DoctorAvailabilityExceptionScalarFieldEnum = {
+  id: 'id',
+  doctorId: 'doctorId',
+  date: 'date',
+  type: 'type',
+  reason: 'reason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DoctorAvailabilityExceptionScalarFieldEnum = (typeof DoctorAvailabilityExceptionScalarFieldEnum)[keyof typeof DoctorAvailabilityExceptionScalarFieldEnum]
+
+
+export const DoctorAvailabilityExceptionWindowScalarFieldEnum = {
+  id: 'id',
+  exceptionId: 'exceptionId',
+  startMinute: 'startMinute',
+  endMinute: 'endMinute',
+  createdAt: 'createdAt'
+} as const
+
+export type DoctorAvailabilityExceptionWindowScalarFieldEnum = (typeof DoctorAvailabilityExceptionWindowScalarFieldEnum)[keyof typeof DoctorAvailabilityExceptionWindowScalarFieldEnum]
 
 
 export const SortOrder = {
