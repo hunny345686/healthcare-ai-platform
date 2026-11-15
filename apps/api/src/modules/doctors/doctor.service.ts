@@ -3,6 +3,7 @@ import { AppError } from "../../common/errors/app-error.js";
 import { createDoctorRepository } from "./doctor.repository.js";
 
 import { isPrismaUniqueConstraintError } from "../../common/utils/prisma-errors.js";
+import type { ReplaceWeeklyAvailabilityInput } from "./doctor.schema.js";
 
 import * as argon2 from "argon2";
 
@@ -31,6 +32,22 @@ export function createDoctorService(prisma: PrismaClient) {
 
     async getAllDoctors() {
       return repository.findMany();
+    },
+
+    async replaceWeeklyAvailability(
+      doctorId: string,
+      data: ReplaceWeeklyAvailabilityInput,
+    ) {
+      const schedule = await repository.replaceWeeklyAvailability(
+        doctorId,
+        data.schedules,
+      );
+
+      if (!schedule) {
+        throw new AppError(404, "DOCTOR_NOT_FOUND", "Doctor not found");
+      }
+
+      return schedule;
     },
 
     async createDoctor(data: {

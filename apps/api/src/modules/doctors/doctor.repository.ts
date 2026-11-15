@@ -1,4 +1,4 @@
-import type { PrismaClient } from "../../generated/prisma/client.js";
+import type { PrismaClient, Weekday } from "../../generated/prisma/client.js";
 
 export function createDoctorRepository(prisma: PrismaClient) {
   return {
@@ -31,6 +31,50 @@ export function createDoctorRepository(prisma: PrismaClient) {
         orderBy: {
           createdAt: "desc",
         },
+      });
+    },
+
+    async replaceWeeklyAvailability(
+      doctorId: string,
+      schedules: Array<{
+        dayOfWeek: Weekday;
+        startMinute: number;
+        endMinute: number;
+      }>,
+    ) {
+      return prisma.$transaction(async (tx) => {
+        // 1. Check whether the doctor exists.
+        const doctor = await tx.doctorProfile.findUnique({
+          where: { id: doctorId },
+          select: { id: true },
+        });
+
+        if (!doctor) {
+          return null;
+        }
+
+        // 2. Remove the doctor's existing weekly schedule.
+        await tx.doctorWeeklyAvailability.deleteMany({
+          where: { doctorId },
+        });
+
+        // 3. Insert the replacement schedule.
+        if (schedules.length > 0) {
+          await tx.doctorWeeklyAvailability.createMany({
+            data: schedules.map((schedule) => ({
+              doctorId,
+              dayOfWeek: schedule.dayOfWeek,
+              startMinute: schedule.startMinute,
+              endMinute: schedule.endMinute,
+            })),
+          });
+        }
+
+        // 4. Return the saved schedule.
+        return tx.doctorWeeklyAvailability.findMany({
+          where: { doctorId },
+          orderBy: [{ dayOfWeek: "asc" }, { startMinute: "asc" }],
+        });
       });
     },
 

@@ -1,9 +1,12 @@
 import type { FastifyPluginAsync } from "fastify";
-
 import { AppError } from "../../common/errors/app-error.js";
-import { doctorParamsSchema } from "./doctor.schema.js";
 import { createDoctorService } from "./doctor.service.js";
-import { createDoctorSchema } from "./doctor.schema.js";
+import {
+  doctorParamsSchema,
+  createDoctorSchema,
+  replaceWeeklyAvailabilitySchema,
+} from "./doctor.schema.js";
+
 const doctorRoutes: FastifyPluginAsync = async (app) => {
   const doctorService = createDoctorService(app.prisma);
 
@@ -48,6 +51,39 @@ const doctorRoutes: FastifyPluginAsync = async (app) => {
       success: true,
       message: "Doctor created successfully",
       data: doctor,
+    });
+  });
+
+  app.put("/:doctorId/availbility/weekly", async (request, reply) => {
+    // 1. Validate doctor ID.
+    const paramsResult = doctorParamsSchema.safeParse(request.params);
+
+    if (!paramsResult.success) {
+      throw new AppError(400, "VALIDATION_ERROR", "Invalid doctor ID");
+    }
+
+    // 2. Validate weekly schedule.
+    const bodyResult = replaceWeeklyAvailabilitySchema.safeParse(request.body);
+
+    if (!bodyResult.success) {
+      throw new AppError(
+        400,
+        "VALIDATION_ERROR",
+        "Invalid weekly availability schedule",
+      );
+    }
+
+    // 3. Execute business logic.
+    const schedule = await doctorService.replaceWeeklyAvailability(
+      paramsResult.data.doctorId,
+      bodyResult.data,
+    );
+
+    // 4. Return response.
+    return reply.code(200).send({
+      success: true,
+      message: "Weekly availability updated successfully",
+      data: schedule,
     });
   });
 };
