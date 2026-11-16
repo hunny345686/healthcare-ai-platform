@@ -1,4 +1,5 @@
 import type { PrismaClient, Weekday } from "../../generated/prisma/client.js";
+import type { UpsertAvailabilityExceptionInput } from "./doctor.schema.js";
 
 export function createDoctorRepository(prisma: PrismaClient) {
   return {
@@ -74,6 +75,76 @@ export function createDoctorRepository(prisma: PrismaClient) {
         return tx.doctorWeeklyAvailability.findMany({
           where: { doctorId },
           orderBy: [{ dayOfWeek: "asc" }, { startMinute: "asc" }],
+        });
+      });
+    },
+
+    async upsertAvailabilityException(
+      doctorId: string,
+      date: Date,
+      data: UpsertAvailabilityExceptionInput,
+    ) {
+      return prisma.$transaction(async (tx) => {
+        // 1. Check whether the doctor exists.
+        const doctor = await tx.doctorProfile.findUnique({
+          where: { id: doctorId },
+          select: { id: true },
+        });
+
+        if (!doctor) {
+          return null;
+        }
+
+        // 2. Create or update the exception for this doctor and date.
+        const exception = await tx.doctorAvailabilityException.upsert({
+          where: {
+            doctorId_date: {
+              doctorId,
+              date,
+            },
+          },
+          create: {
+            doctorId,
+            date,
+            type: data.type,
+            reason: data.reason ?? null,
+          },
+          update: {
+            type: data.type,
+            reason: data.reason ?? null,
+          },
+        });
+
+        // 3. Remove previously configured windows.
+        await tx.doctorAvailabilityExceptionWindow.deleteMany({
+          where: {
+            exceptionId: exception.id,
+          },
+        });
+
+        // 4. Insert new windows only for CUSTOM_HOURS.
+        if (data.type === "CUSTOM_HOURS") {
+          await tx.doctorAvailabilityExceptionWindow.createMany({
+            data: data.windows.map((window) => ({
+              exceptionId: exception.id,
+              startMinute: window.startMinute,
+              endMinute: window.endMinute,
+            })),
+          });
+        }
+
+        // 5. Return the saved exception with its windows.
+        return tx.doctorAvailabilityException.findUnique({
+          where: {
+            id: exception.id,
+          },
+          include: {
+            windows: {
+              orderBy: {
+                startMinute: "asc",
+              },
+            },
+          },
         });
       });
     },

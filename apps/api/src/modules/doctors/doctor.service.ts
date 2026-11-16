@@ -3,7 +3,10 @@ import { AppError } from "../../common/errors/app-error.js";
 import { createDoctorRepository } from "./doctor.repository.js";
 
 import { isPrismaUniqueConstraintError } from "../../common/utils/prisma-errors.js";
-import type { ReplaceWeeklyAvailabilityInput } from "./doctor.schema.js";
+import type {
+  ReplaceWeeklyAvailabilityInput,
+  UpsertAvailabilityExceptionInput,
+} from "./doctor.schema.js";
 
 import * as argon2 from "argon2";
 
@@ -48,6 +51,26 @@ export function createDoctorService(prisma: PrismaClient) {
       }
 
       return schedule;
+    },
+    async upsertAvailabilityException(
+      doctorId: string,
+      date: string,
+      data: UpsertAvailabilityExceptionInput,
+    ) {
+      // Convert the date-only value into UTC midnight.
+      const exceptionDate = new Date(`${date}T00:00:00.000Z`);
+
+      const exception = await repository.upsertAvailabilityException(
+        doctorId,
+        exceptionDate,
+        data,
+      );
+
+      if (!exception) {
+        throw new AppError(404, "DOCTOR_NOT_FOUND", "Doctor not found");
+      }
+
+      return exception;
     },
 
     async createDoctor(data: {

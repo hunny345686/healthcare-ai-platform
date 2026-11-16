@@ -129,7 +129,15 @@ Backend layers:
 1. Project setup and backend foundations — completed.
 2. Database architecture and Prisma — core implementation completed.
 3. Doctor and Patient management — initial registration implemented.
-4. Appointment management and concurrency.
+4. Appointment management and concurrency — in progress.
+   - Doctor weekly availability — implemented and verified.
+   - Date-specific availability exceptions — implemented and verified.
+   - Appointment slot calculation — next.
+   - Appointment creation and cancellation.
+   - Preventing overlapping bookings.
+   - PostgreSQL transactions and concurrency.
+   - Idempotency for retry-sensitive booking requests.
+   - HTTP 409 conflict handling.
 5. Authentication and authorization.
 6. PostgreSQL internals, indexing and performance.
 7. Redis and caching.
@@ -178,7 +186,7 @@ For every feature:
 
 Use conventional commit messages.
 
-## 8. Current project progress — November 13, 2026
+## 8. Current project progress — November 16, 2026
 
 ### Completed — Project foundations
 
@@ -188,6 +196,194 @@ Use conventional commit messages.
 - Fastify backend scaffold.
 - Initial health endpoint.
 - Docker environment.
+
+### Completed — Backend architecture learning
+
+- HTTP request lifecycle.
+- Routes, controllers, services and repositories.
+- Route parameters versus query parameters.
+- HTTP status codes.
+- Zod runtime validation concepts.
+- Centralized error handling concepts.
+- Fastify plugins and encapsulation.
+- Fastify hooks.
+- Fastify `.inject()` API testing concepts.
+
+### Completed — Database architecture implementation
+
+- PostgreSQL running through Docker Compose.
+- Prisma 7 configuration.
+- Prisma Client and PostgreSQL adapter.
+- Database migrations.
+- User, PatientProfile, DoctorProfile and Appointment models.
+- User-to-profile and profile-to-appointment relationships.
+- Fastify database plugin and Prisma integration.
+- Database health endpoint.
+- Doctor repository and service.
+- Database-backed Doctor GET endpoints.
+- Doctor registration using Prisma transactions.
+- Argon2id password hashing.
+- Patient registration using Prisma transactions.
+- Duplicate email and license handling using database constraints.
+
+### Phase 3 — Doctor and Patient management
+
+**Doctor management**
+
+- Doctor registration implemented.
+- Doctor GET endpoints implemented.
+- Duplicate email and license handling.
+- Doctor registration transaction verified.
+
+**Patient management**
+
+- Patient registration implemented.
+- Patient profile creation using Prisma transactions.
+- Duplicate email handling.
+
+**Git status**
+
+- Doctor registration milestone: commit and push confirmed.
+- Patient registration milestone: verify Git history before marking committed and pushed.
+
+### Phase 4 — Appointment Management
+
+**Milestone 1 — Doctor availability and slot design**
+
+Concepts discussed:
+
+- Weekly recurring schedules.
+- Date-specific availability exceptions.
+- Doctor timezone handling.
+- PostgreSQL DATE versus TIMESTAMPTZ.
+- Integer minutes after midnight.
+- Dynamic slot generation.
+- Half-open time intervals.
+- Appointment overlap detection.
+- Availability overrides.
+
+**Milestone 2 — Doctor Availability Management**
+
+Task 2.1 — Weekly Availability
+
+Status:
+
+- Discussed: Yes.
+- Implemented: Yes.
+- Verified: User confirmed successful manual verification and typechecking.
+- Committed and pushed: Not confirmed.
+
+Implementation:
+
+- Weekly availability Zod validation.
+- Weekday validation.
+- Working-hour range validation.
+- Overlapping schedule validation.
+- Weekly availability replacement.
+- Prisma transaction for replacing schedules.
+- Doctor existence validation.
+- Service-layer error handling.
+- API endpoint:
+
+`PUT /api/v1/doctors/:doctorId/availability/weekly`
+
+Task 2.2 — Date-specific Availability Exceptions
+
+Status:
+
+- Discussed: Yes.
+- Implemented: Yes.
+- Verified: User confirmed successful implementation and verification.
+- Committed and pushed: Pending confirmation.
+
+Implementation:
+
+- Actual calendar date validation using YYYY-MM-DD.
+- CLOSED exception type.
+- CUSTOM_HOURS exception type.
+- Exception window validation.
+- Overlapping window validation.
+- Prisma transactional upsert.
+- Existing exception windows replaced atomically.
+- Service-layer date conversion.
+- Doctor-not-found handling.
+- API endpoint:
+
+`PUT /api/v1/doctors/:doctorId/availability/exceptions/:date`
+
+Architecture decisions:
+
+- Weekly schedules and date-specific exceptions are stored separately.
+- Date-specific exceptions override weekly availability.
+- CLOSED means the doctor is unavailable for the entire date.
+- CUSTOM_HOURS replaces the recurring weekly schedule for that date.
+- PostgreSQL DATE is used for exception dates.
+- Time windows use integer minutes after midnight in the doctor's local timezone.
+- Doctor timezone is stored as an IANA timezone identifier.
+- Prisma transactions maintain atomicity when replacing schedules and exceptions.
+- One exception per doctor per date is enforced by a compound unique constraint.
+- No persisted appointment slots; availability will initially be calculated dynamically.
+
+### Current learning status
+
+- PostgreSQL fundamentals: taught.
+- Prisma integration: implemented.
+- Relational database design: implemented.
+- Repository and service patterns: implemented.
+- Prisma transactions: practiced.
+- Zod validation and cross-field validation: practiced.
+- Weekly availability management: implemented and verified.
+- Date-specific exception management: implemented and verified.
+- Appointment concurrency and double-booking prevention: not yet implemented.
+- Automated unit and integration testing: deferred to the dedicated testing phase.
+
+### Current phase
+
+Phase 4 — Appointment Management.
+
+### Current milestone
+
+Milestone 3 — Appointment Slot Calculation.
+
+### Exact next task
+
+Implement the appointment availability calculation service.
+
+It must combine:
+
+1. Doctor weekly availability.
+2. Date-specific availability exceptions.
+3. Existing PENDING and CONFIRMED appointments.
+4. Appointment duration.
+5. Buffer time.
+6. Doctor timezone and UTC conversion.
+
+The first objective is to calculate available appointment slots for a selected doctor and date.
+
+After slot calculation, implement appointment booking with database-level concurrency protection.
+
+### Git status
+
+- Doctor registration: commit and push confirmed.
+- Patient registration: verify Git history.
+- Weekly availability: implementation and verification confirmed; commit/push not confirmed.
+- Date-specific availability exceptions: implementation and verification confirmed; commit/push not confirmed.
+
+Never assume a commit or push succeeded without confirmation or repository evidence.
+
+### Deferred work
+
+- Authentication and role-based authorization.
+- Appointment booking and cancellation.
+- Database-level overlapping appointment prevention.
+- Automated unit and integration tests.
+- E2E testing.
+- Database performance optimization.
+- Redis caching.
+- Kafka and transactional outbox.
+- AI/RAG implementation.
+- CI/CD and deployment.
+- Load and security testing.
 
 ### Completed — Backend architecture learning
 
@@ -313,3 +509,30 @@ Update PROJECT_MASTER.md at meaningful milestones.
 At the end of every session, provide a reusable checkpoint containing the exact current phase, completed work, unfinished tasks, architecture decisions, file changes and Git status.
 
 Automated testing is deferred to the dedicated testing and deployment phase. Continue basic type checking, build verification and manual API verification during feature development.
+
+### Latest continuation checkpoint
+
+The project has progressed beyond Doctor and Patient registration.
+
+Doctor weekly availability and date-specific availability exceptions have been implemented and verified.
+
+The next session must continue from:
+
+**Phase 4 → Milestone 3 → Appointment Slot Calculation.**
+
+Do not restart weekly availability or exception implementation.
+
+First inspect the existing doctor schema, repository, service and routes before implementing the appointment availability calculation.
+
+Maintain the existing architecture:
+
+- Modular monolith.
+- Fastify and TypeScript.
+- Prisma and PostgreSQL.
+- Zod validation.
+- Repository and service separation.
+- Doctor timezone awareness.
+
+Keep appointment availability calculations separate from appointment booking concurrency guarantees.
+
+The next major engineering objective is to calculate correct available slots, followed by safe appointment booking with PostgreSQL-level double-booking prevention.

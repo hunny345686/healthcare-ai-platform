@@ -5,6 +5,8 @@ import {
   doctorParamsSchema,
   createDoctorSchema,
   replaceWeeklyAvailabilitySchema,
+  upsertAvailabilityExceptionSchema,
+  doctorAvailabilityExceptionParamsSchema,
 } from "./doctor.schema.js";
 
 const doctorRoutes: FastifyPluginAsync = async (app) => {
@@ -86,6 +88,47 @@ const doctorRoutes: FastifyPluginAsync = async (app) => {
       data: schedule,
     });
   });
+
+  app.put(
+    "/:doctorId/availability/exceptions/:date",
+    async (request, reply) => {
+      const paramsResult = doctorAvailabilityExceptionParamsSchema.safeParse(
+        request.params,
+      );
+
+      if (!paramsResult.success) {
+        throw new AppError(
+          400,
+          "VALIDATION_ERROR",
+          "Invalid doctor ID or date",
+        );
+      }
+
+      const bodyResult = upsertAvailabilityExceptionSchema.safeParse(
+        request.body,
+      );
+
+      if (!bodyResult.success) {
+        throw new AppError(
+          400,
+          "VALIDATION_ERROR",
+          "Invalid availability exception",
+        );
+      }
+
+      const exception = await doctorService.upsertAvailabilityException(
+        paramsResult.data.doctorId,
+        paramsResult.data.date,
+        bodyResult.data,
+      );
+
+      return reply.code(200).send({
+        success: true,
+        message: "Doctor availability exception updated successfully",
+        data: exception,
+      });
+    },
+  );
 };
 
 export default doctorRoutes;
