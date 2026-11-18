@@ -9,6 +9,7 @@ import doctorRoutes from "./modules/doctors/doctor.routes.js";
 import databasePlugin from "./infrastructure/database/prisma.plugin.js";
 
 import patientRoutes from "./modules/patients/patient.routes.js";
+import appointmentRoutes from "./modules/appointments/appointment.routes.js";
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 
@@ -68,6 +69,10 @@ export function buildApp() {
 
   app.register(patientRoutes, {
     prefix: "/api/v1/patients",
+  });
+
+  app.register(appointmentRoutes, {
+    prefix: "/api/v1/appointments",
   });
 
   return app;

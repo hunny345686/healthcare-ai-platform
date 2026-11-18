@@ -10,6 +10,6 @@
     "types": ["node"],
     "sourceMap": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/modules/appointments/appointment.repository.ts"],
   "exclude": ["node_modules", "dist"]
 }
