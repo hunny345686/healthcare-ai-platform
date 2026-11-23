@@ -1,11 +1,15 @@
 import type { FastifyPluginAsync } from "fastify";
 import { AppError } from "../../common/errors/app-error.js";
 import { createAppointmentService } from "./appointment.service.js";
-import { getAvailableSlotsSchema } from "./appointment.schema.js";
+import {
+  createAppointmentSchema,
+  getAvailableSlotsSchema,
+} from "./appointment.schema.js";
 
 const appointmentRoutes: FastifyPluginAsync = async (app) => {
   const appointmentService = createAppointmentService(app.prisma);
 
+  // GET /availability
   app.get("/availability", async (request, reply) => {
     const queryResult = getAvailableSlotsSchema.safeParse(request.query);
 
@@ -28,6 +32,29 @@ const appointmentRoutes: FastifyPluginAsync = async (app) => {
       success: true,
       message: "Available appointment slots retrieved successfully",
       data: availability,
+    });
+  });
+
+  // POST /
+  app.post("/", async (request, reply) => {
+    const bodyResult = createAppointmentSchema.safeParse(request.body);
+
+    if (!bodyResult.success) {
+      throw new AppError(
+        400,
+        "VALIDATION_ERROR",
+        "Invalid appointment booking request",
+      );
+    }
+
+    const appointment = await appointmentService.createAppointment(
+      bodyResult.data,
+    );
+
+    return reply.code(201).send({
+      success: true,
+      message: "Appointment booked successfully",
+      data: appointment,
     });
   });
 };

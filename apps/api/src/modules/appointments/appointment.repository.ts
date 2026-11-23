@@ -58,5 +58,46 @@ export function createAppointmentRepository(prisma: PrismaClient) {
         },
       });
     },
+    findDoctorById(doctorId: string) {
+      return prisma.doctorProfile.findUnique({
+        where: { id: doctorId },
+        select: {
+          id: true,
+          timezone: true,
+        },
+      });
+    },
+
+    findPatientById(patientId: string) {
+      return prisma.patientProfile.findUnique({
+        where: { id: patientId },
+        select: { id: true },
+      });
+    },
+
+    create(data: {
+      patientId: string;
+      doctorId: string;
+      startAt: Date;
+      endAt: Date;
+    }) {
+      return prisma.appointment.create({
+        data: {
+          patientId: data.patientId,
+          doctorId: data.doctorId,
+          startAt: data.startAt,
+          endAt: data.endAt,
+        },
+        select: {
+          id: true,
+          patientId: true,
+          doctorId: true,
+          startAt: true,
+          endAt: true,
+          status: true,
+          createdAt: true,
+        },
+      });
+    },
   };
 }

@@ -536,3 +536,71 @@ Maintain the existing architecture:
 Keep appointment availability calculations separate from appointment booking concurrency guarantees.
 
 The next major engineering objective is to calculate correct available slots, followed by safe appointment booking with PostgreSQL-level double-booking prevention.
+
+### Milestone 3 — Appointment Slot Calculation
+
+**Status**
+
+- Discussed: Yes.
+- Implemented: Yes.
+- Verified: Yes — user confirmed typecheck, build and manual API verification.
+- Committed and pushed: Pending confirmation.
+
+**Implementation**
+
+- Created the appointments backend module.
+- Implemented appointment repository.
+- Implemented doctor schedule and exception retrieval.
+- Implemented blocking appointment retrieval.
+- Implemented timezone-aware date boundary calculations using Temporal.
+- Implemented dynamic appointment slot generation.
+- Implemented overlap detection using half-open intervals.
+- Added Zod validation for doctor ID and requested date.
+- Added GET `/api/v1/appointments/availability`.
+- Registered appointment routes in Fastify.
+
+**Initial scheduling configuration**
+
+- Appointment duration: 30 minutes.
+- Slot interval: 30 minutes.
+- Buffer time: 0 minutes.
+- Blocking statuses: PENDING and CONFIRMED.
+- Cancelled and completed appointments do not block availability.
+
+**Remaining hardening**
+
+- Explicit daylight-saving ambiguity and nonexistent-time policy.
+- Additional timezone edge-case verification.
+- Booking concurrency protection.
+- Database-level prevention of overlapping appointments.
+
+### Phase 4 — Appointment Management
+
+#### Implemented
+
+- Doctor weekly availability management.
+- Doctor date-specific availability exceptions.
+- Dynamic appointment slot calculation using doctor timezone.
+- Appointment availability API: `GET /api/v1/appointments/availability`.
+- Appointment booking request validation using Zod.
+- Appointment booking repository and service.
+- Appointment creation API: `POST /api/v1/appointments`.
+- Server-side appointment duration calculation (30 minutes).
+- PostgreSQL exclusion constraint for preventing overlapping active appointments.
+- Booking conflict handling with HTTP 409.
+
+#### Pending
+
+- Appointment cancellation (`PENDING` and `CONFIRMED` only).
+- Appointment history API.
+- Appointment status management.
+- Authentication and role-based authorization.
+- Idempotency for booking requests.
+- Integration and concurrency testing.
+
+#### Verification status
+
+- Implementation: Completed for availability and booking features.
+- Typechecking: Verify before committing the latest booking changes.
+- End-to-end testing: Deferred until synthetic patient data and the dedicated testing phase.
+- Git commit/push: Pending confirmation for the latest booking changes.

@@ -18,3 +18,14 @@ export const getAvailableSlotsSchema = z.object({
 });
 
 export type GetAvailableSlotsInput = z.infer<typeof getAvailableSlotsSchema>;
+
+export const createAppointmentSchema = z.object({
+  patientId: z.string().uuid(),
+  doctorId: z.string().uuid(),
+  startAt: z.string().datetime({
+    offset: true,
+    message: "Appointment start time must be a valid ISO datetime",
+  }),
+});
+
+export type CreateAppointmentInput = z.infer<typeof createAppointmentSchema>;
