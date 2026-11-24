@@ -276,6 +276,39 @@ export function createAppointmentService(prisma: PrismaClient) {
         throw error;
       }
     },
+
+    async cancelAppointment(appointmentId: string) {
+      // 1. Attempt atomic cancellation.
+      const result = await repository.cancelIfCancellable(appointmentId);
+
+      // 2. If no row was updated, determine why.
+      if (result.count === 0) {
+        const appointment =
+          await repository.findAppointmentStatusById(appointmentId);
+
+        // Appointment does not exist.
+        if (!appointment) {
+          throw new AppError(
+            404,
+            "APPOINTMENT_NOT_FOUND",
+            "Appointment not found",
+          );
+        }
+
+        // Appointment exists but cannot be cancelled.
+        throw new AppError(
+          409,
+          "APPOINTMENT_CANNOT_BE_CANCELLED",
+          `Appointment with status ${appointment.status} cannot be cancelled`,
+        );
+      }
+
+      // 3. Return cancellation result.
+      return {
+        appointmentId,
+        status: "CANCELLED" as const,
+      };
+    },
   };
 
   return service;

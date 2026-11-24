@@ -4,6 +4,7 @@ import { createAppointmentService } from "./appointment.service.js";
 import {
   createAppointmentSchema,
   getAvailableSlotsSchema,
+  appointmentIdParamSchema,
 } from "./appointment.schema.js";
 
 const appointmentRoutes: FastifyPluginAsync = async (app) => {
@@ -55,6 +56,26 @@ const appointmentRoutes: FastifyPluginAsync = async (app) => {
       success: true,
       message: "Appointment booked successfully",
       data: appointment,
+    });
+  });
+
+  // POST /:appointmentId/cancel
+  app.post("/:appointmentId/cancel", async (request, reply) => {
+    const paramsResult = appointmentIdParamSchema.safeParse(request.params);
+
+    if (!paramsResult.success) {
+      throw new AppError(400, "VALIDATION_ERROR", "Invalid appointment ID");
+    }
+
+    const { appointmentId } = paramsResult.data;
+
+    const cancellation =
+      await appointmentService.cancelAppointment(appointmentId);
+
+    return reply.code(200).send({
+      success: true,
+      message: "Appointment cancelled successfully",
+      data: cancellation,
     });
   });
 };

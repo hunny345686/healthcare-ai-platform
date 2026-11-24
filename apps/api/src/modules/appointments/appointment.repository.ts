@@ -99,5 +99,31 @@ export function createAppointmentRepository(prisma: PrismaClient) {
         },
       });
     },
+
+    cancelIfCancellable(appointmentId: string) {
+      return prisma.appointment.updateMany({
+        where: {
+          id: appointmentId,
+          status: {
+            in: ["PENDING", "CONFIRMED"],
+          },
+        },
+        data: {
+          status: "CANCELLED",
+        },
+      });
+    },
+
+    findAppointmentStatusById(appointmentId: string) {
+      return prisma.appointment.findUnique({
+        where: {
+          id: appointmentId,
+        },
+        select: {
+          id: true,
+          status: true,
+        },
+      });
+    },
   };
 }

@@ -29,3 +29,7 @@ export const createAppointmentSchema = z.object({
 });
 
 export type CreateAppointmentInput = z.infer<typeof createAppointmentSchema>;
+
+export const appointmentIdParamSchema = z.object({
+  appointmentId: z.string().uuid(),
+});
