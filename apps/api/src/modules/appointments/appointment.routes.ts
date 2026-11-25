@@ -5,6 +5,7 @@ import {
   createAppointmentSchema,
   getAvailableSlotsSchema,
   appointmentIdParamSchema,
+  getAppointmentHistorySchema,
 } from "./appointment.schema.js";
 
 const appointmentRoutes: FastifyPluginAsync = async (app) => {
@@ -76,6 +77,29 @@ const appointmentRoutes: FastifyPluginAsync = async (app) => {
       success: true,
       message: "Appointment cancelled successfully",
       data: cancellation,
+    });
+  });
+
+  // GET / - Patient appointment history
+  app.get("/", async (request, reply) => {
+    const queryResult = getAppointmentHistorySchema.safeParse(request.query);
+
+    if (!queryResult.success) {
+      throw new AppError(
+        400,
+        "VALIDATION_ERROR",
+        "Invalid appointment history query parameters",
+      );
+    }
+
+    const history = await appointmentService.getPatientAppointmentHistory(
+      queryResult.data,
+    );
+
+    return reply.code(200).send({
+      success: true,
+      message: "Appointment history retrieved successfully",
+      data: history,
     });
   });
 };

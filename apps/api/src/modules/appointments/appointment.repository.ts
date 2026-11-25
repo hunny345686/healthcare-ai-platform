@@ -125,5 +125,62 @@ export function createAppointmentRepository(prisma: PrismaClient) {
         },
       });
     },
+
+    findPatientAppointments(
+      patientId: string,
+      options: {
+        skip: number;
+        take: number;
+        status?: "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED";
+      },
+    ) {
+      return prisma.appointment.findMany({
+        where: {
+          patientId,
+          ...(options.status && {
+            status: options.status,
+          }),
+        },
+        skip: options.skip,
+        take: options.take,
+        orderBy: {
+          startAt: "desc",
+        },
+        select: {
+          id: true,
+          doctorId: true,
+          patientId: true,
+          startAt: true,
+          endAt: true,
+          status: true,
+          createdAt: true,
+          doctor: {
+            select: {
+              specialty: true,
+              user: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    },
+
+    countPatientAppointments(
+      patientId: string,
+      status?: "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED",
+    ) {
+      return prisma.appointment.count({
+        where: {
+          patientId,
+          ...(status && {
+            status,
+          }),
+        },
+      });
+    },
   };
 }

@@ -33,3 +33,17 @@ export type CreateAppointmentInput = z.infer<typeof createAppointmentSchema>;
 export const appointmentIdParamSchema = z.object({
   appointmentId: z.string().uuid(),
 });
+
+export const getAppointmentHistorySchema = z.object({
+  patientId: z.string().uuid(),
+
+  page: z.coerce.number().int().min(1).default(1),
+
+  limit: z.coerce.number().int().min(1).max(100).default(10),
+
+  status: z.enum(["PENDING", "CONFIRMED", "CANCELLED", "COMPLETED"]).optional(),
+});
+
+export type GetAppointmentHistoryInput = z.infer<
+  typeof getAppointmentHistorySchema
+>;

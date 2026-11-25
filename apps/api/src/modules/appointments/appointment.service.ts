@@ -2,7 +2,10 @@ import type { PrismaClient } from "../../generated/prisma/client.js";
 import { Temporal } from "@js-temporal/polyfill";
 import { AppError } from "../../common/errors/app-error.js";
 import { createAppointmentRepository } from "./appointment.repository.js";
-import type { CreateAppointmentInput } from "./appointment.schema.js";
+import type {
+  CreateAppointmentInput,
+  GetAppointmentHistoryInput,
+} from "./appointment.schema.js";
 
 const APPOINTMENT_DURATION_MINUTES = 30;
 const SLOT_INTERVAL_MINUTES = 30;
@@ -307,6 +310,47 @@ export function createAppointmentService(prisma: PrismaClient) {
       return {
         appointmentId,
         status: "CANCELLED" as const,
+      };
+    },
+
+    async getPatientAppointmentHistory(input: GetAppointmentHistoryInput) {
+      const { patientId, page, limit, status } = input;
+
+      // 1. Verify patient exists.
+      const patient = await repository.findPatientById(patientId);
+
+      if (!patient) {
+        throw new AppError(404, "PATIENT_NOT_FOUND", "Patient not found");
+      }
+
+      // 2. Calculate pagination offset.
+      const skip = (page - 1) * limit;
+
+      // 3. Fetch appointments and total count.
+      const [appointments, total] = await Promise.all([
+        repository.findPatientAppointments(patientId, {
+          skip,
+          take: limit,
+          ...(status && { status }),
+        }),
+
+        repository.countPatientAppointments(patientId, status),
+      ]);
+
+      // 4. Calculate total pages.
+      const totalPages = Math.ceil(total / limit);
+
+      // 5. Return paginated response.
+      return {
+        appointments,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages,
+          hasNextPage: page < totalPages,
+          hasPreviousPage: page > 1 && total > 0,
+        },
       };
     },
   };
