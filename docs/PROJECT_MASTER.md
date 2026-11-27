@@ -604,3 +604,56 @@ The next major engineering objective is to calculate correct available slots, fo
 - Typechecking: Verify before committing the latest booking changes.
 - End-to-end testing: Deferred until synthetic patient data and the dedicated testing phase.
 - Git commit/push: Pending confirmation for the latest booking changes.
+
+## Phase 5 — Authentication & Authorization (Checkpoint)
+
+### Implemented
+
+- [x] Registration with Zod validation
+- [x] Login with credential validation
+- [x] Password hashing using Argon2id
+- [x] Generic invalid-credentials response
+- [x] JWT plugin registered in Fastify
+- [x] JWT access token generation during login
+- [x] Access token expiration configured (15 minutes)
+- [x] JWT payload includes `sub` and `role`
+- [x] Authentication middleware (`authenticate`)
+- [x] JWT TypeScript module augmentation
+- [x] Role-based authorization middleware (`authorizeRoles`)
+- [x] Ownership authorization groundwork (`authorizeSelfOrAdmin`)
+- [x] Protected `/me` demonstration endpoint
+- [x] Admin-only `/admin-check` demonstration endpoint
+
+### Security concepts covered
+
+- Authentication vs authorization
+- JWT structure and signing
+- JWT verification
+- HTTP 401 vs 403
+- Fastify `preHandler`
+- Role-based access control (RBAC)
+- Ownership authorization
+- BOLA / IDOR vulnerabilities
+- Identity derived from verified JWT (`request.user.sub`)
+- Never trust client-supplied identity for ownership
+
+### Architecture decisions
+
+- JWT access token expiration: 15 minutes
+- JWT signing using configured server-side secret
+- JWT payload contains identity and role only
+- No passwords or medical information in JWT payload
+- Authentication and authorization implemented as reusable middleware
+- Database-backed resource ownership checks will be required for actual patient and appointment resources
+
+### Current verification status
+
+- TypeScript typecheck: Passed for the API workspace (latest reported checkpoint)
+- Runtime API tests: Deferred to dedicated testing phase
+- End-to-end security verification: Pending
+
+### Next step
+
+- Apply authentication and authorization to actual patient routes
+- Derive patient identity from authenticated user
+- Implement database-backed ownership checks for patient and appointment resources

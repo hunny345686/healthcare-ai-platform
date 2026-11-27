@@ -12,6 +12,8 @@ import patientRoutes from "./modules/patients/patient.routes.js";
 import appointmentRoutes from "./modules/appointments/appointment.routes.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 
+import jwtPlugin from "./infrastructure/jwt.plugin.js";
+
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 
 const projectRoot = resolve(currentDirectory, "../../..");
@@ -26,6 +28,7 @@ export function buildApp() {
   });
 
   app.register(databasePlugin);
+  app.register(jwtPlugin);
 
   app.setErrorHandler((error, request, reply) => {
     request.log.error(error);
@@ -75,6 +78,7 @@ export function buildApp() {
   app.register(appointmentRoutes, {
     prefix: "/api/v1/appointments",
   });
+
   app.register(authRoutes, {
     prefix: "/api/v1/auth",
   });
